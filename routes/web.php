@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::post('/registercompany', 'CompanyController@register');
+Route::post('/registercompany_check','CompanyController@registered_email');
 
+Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');

@@ -18,11 +18,16 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['owner', 'employee']);
-            $table->text('picture');
+            $table->integer('company_id')->unsigned();
+            $table->text('picture')->nullable();
             $table->enum('verified',['unverified', 'verified']);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('cascade');
         });
     }
 

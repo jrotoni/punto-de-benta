@@ -15,3 +15,33 @@ body {
 .navbar-nav > li > a:hover {
     color: orange !important;
 }
+
+.navbar-nav>.open>a {
+    background-color: #F44336 !important;
+}
+
+.navbar-toggle {
+    background-color: #ff652f;
+}
+
+.icon-bar {
+    background-color: white !important;
+}
+
+.dropdown-menu {
+    background-color: #2ab27a;
+}
+
+.dropdown-menu>li>a {
+    color: #fbffd4;
+}
+
+@media (max-width: 767px) {
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #fecd81;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #fff;
+}
+}

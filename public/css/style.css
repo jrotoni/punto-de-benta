@@ -1,0 +1,17 @@
+body {
+    background-color: #570063;
+    /* color: #9aaebc; */
+}
+
+.navbar-default {
+    background-color: #570063;
+    border-color: #570063;
+}
+
+.navbar-nav > li > a {
+    color: #ffcd81 !important;
+}
+
+.navbar-nav > li > a:hover {
+    color: orange !important;
+}

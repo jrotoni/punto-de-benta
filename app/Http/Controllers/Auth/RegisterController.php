@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Company;
 
 class RegisterController extends Controller
 {
@@ -62,11 +63,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // dd($data);
+        $new_company = new Company();
+        $new_company->company_name = $data['name'];
+        $new_company->company_email = $data['email'];
+        $new_company->save();
+        // dd($new_company->id);
         return User::create([
+            'company_id' => $new_company->id,
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-        ]);
+            ]);
     }
 }

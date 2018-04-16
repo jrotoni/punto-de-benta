@@ -17,8 +17,8 @@ class CreateCompaniesTable extends Migration
             $table->increments('id');
             $table->string('company_name');
             $table->string('company_email')->unique();
-            $table->enum('verified',['unverified', 'verified']);
-            $table->string('token');
+            // $table->enum('verified',['unverified', 'verified']);
+            // $table->string('token');
             $table->timestamps();
         });
     }

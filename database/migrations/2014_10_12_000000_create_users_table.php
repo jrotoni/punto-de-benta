@@ -15,13 +15,19 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id')->unsigned();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->text('picture')->nullable();
-            $table->enum('verified',['unverified', 'verified']);
+            // $table->enum('verified',['unverified', 'verified']);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('cascade');
         });
     }
 

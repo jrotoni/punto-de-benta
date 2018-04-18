@@ -15,6 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/sales', function () {
+    return view('settings/sales');
+});
+
+Route::get('/staff', function () {
+    return view('settings/staff');
+});
+
+Route::get('/products', 'ProductController@show');
+
 Route::post('/registercompany', 'CompanyController@register');
 Route::post('/registercompany_check','CompanyController@registered_email');
 

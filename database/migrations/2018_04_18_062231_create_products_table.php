@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,27 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
+            $table->integer('category_id')->unsigned();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->decimal('stock_price', 8, 2);
+            $table->decimal('retail_price', 8, 2);
+            $table->integer('stocks');
+            $table->string('stock_unit');
+            $table->integer('reorder_point');
             $table->text('picture')->nullable();
-            $table->enum('role',['admin', 'staff']);
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('cascade');
+            $table->foreign('category_id')
+                ->references('id')
+                ->on('categories')
+                ->onDelete('cascade');    
         });
     }
 
@@ -38,6 +44,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('products');
     }
 }

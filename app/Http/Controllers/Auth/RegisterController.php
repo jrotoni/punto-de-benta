@@ -68,8 +68,11 @@ class RegisterController extends Controller
         $new_company->company_email = $data['email'];
         $new_company->save();
         // dd($new_company->id);
+        // $destinationPath = public_path(). '/images/noimage.png';
         return User::create([
             'company_id' => $new_company->id,
+            'picture' => '/images/noimage.png',
+            'role' => 'admin',
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),

@@ -57,7 +57,7 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="#"><i class="fas fa-cogs"></i> Settings</a>
+                                        <a href="{{url('/sales')}}"><i class="fas fa-cogs"></i> Settings</a>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

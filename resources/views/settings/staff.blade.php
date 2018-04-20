@@ -12,13 +12,13 @@
 </li>
 <li>
     <a href="{{ url('/products') }}">
-        <span><i class="fa fa-dropbox"></i></span>
+        <span><i class="fab fa-dropbox"></i></span>
         <span>Products</span>
     </a>
 </li>
 <li>
     <a href="{{ url('/sales') }}">
-        <span><i class="fa fa-bar-chart"></i></span>
+        <span><i class="fas fa-chart-bar"></i></span>
         <span>Sales Report</span>
     </a>
 </li>

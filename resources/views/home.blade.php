@@ -2,9 +2,7 @@
 
 @section('style')
 <style>
-table, th {
-	text-align: center;
-}
+
 .stylish-input-group .input-group-addon{
     background: white !important; 
 }
@@ -153,6 +151,7 @@ table, th {
     </div> {{-- //row --}}
 </div> {{-- //container-fluid --}}
 
+{{-- modal --}}
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">

@@ -24,6 +24,9 @@ Route::get('/staff', function () {
 });
 
 Route::get('/products', 'ProductController@show');
+Route::post('/products/addcategory', 'CategoryController@add');
+Route::post('/products/removecategory', 'CategoryController@delete');
+Route::post('/products/updatecategory', 'CategoryController@update');
 
 Route::post('/registercompany', 'CompanyController@register');
 Route::post('/registercompany_check','CompanyController@registered_email');

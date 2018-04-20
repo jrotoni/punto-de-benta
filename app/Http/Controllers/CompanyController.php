@@ -27,11 +27,10 @@ class CompanyController extends Controller
     function registered_email(Request $request){
 
         if(Company::where('company_email',$request->company_email)->first()){
-            echo "success";
-        }
-
-        else {
             echo "fail";
+        }
+        else {
+            echo "success";
         }
 
     }

@@ -31,16 +31,8 @@ Sales Report
 
 @section('content')
 <div class="col-md-12">
-            <div class="panel panel-success">
-                <div class="panel-body">
-                    <div class="text-center">
-                        <h2>Total Amount: <strong>PHP 3.75</strong></h2>
-                        <h4>No. of Items: 2</h4>
-                    </div>
-                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal"><i class="fa fa-shopping-cart"></i> Purchase</button>
-                </div>
-            </div>
-            </div>
+    <h2>This feature is exclusive for <strong>premium accounts</strong>.</h2>
+</div>
 @endsection
 
 @section('scripts')

@@ -30,6 +30,9 @@ Staff
 @endsection
 
 @section('content')
+<div class="col-md-12">
+    <h2>This feature is exclusive for <strong>premium accounts</strong>.</h2>
+</div>
 @endsection
 
 @section('scripts')

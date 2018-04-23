@@ -2,12 +2,12 @@
 
 @section('style')
 <style>
-    .modal {
+.modal-center {
   text-align: center;
   padding: 0!important;
 }
 
-.modal:before {
+.modal-center:before {
   content: '';
   display: inline-block;
   height: 100%;
@@ -15,7 +15,7 @@
   margin-right: -4px;
 }
 
-.modal-dialog {
+.modal-dialog-center {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
@@ -61,6 +61,18 @@ Products
   <div class="tab-content">
     <div id="productsTab" class="tab-pane fade in active">
         <div class="row">
+            @if(count($errors)>0)
+            <div class="alert alert-danger">
+            @foreach($errors->all() as $error)
+            <p>{{$error}}</p>
+            @endforeach
+            </div>
+            @endif
+            @if(Session::has('status'))
+                <div class="alert alert-success">
+                {{Session::get('status')}}
+                </div>
+            @endif
             <div class="form-group col-md-2 col-sm-12" style="margin: 0; padding: 0;">
                 <select class="form-control" name="category">
                     <option>All</option>
@@ -77,9 +89,9 @@ Products
             <div class="form-group col-md-5" style="margin: 0;">
             <div id="imaginary_container"> 
                     <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control"  placeholder="Search" >
+                        <input type="text" class="form-control search-value"  placeholder="Search" >
                         <span class="input-group-addon">
-                            <button type="submit">
+                            <button type="submit" class="clear-search">
                                 <i class="fas fa-search"></i>
                             </button>  
                         </span>
@@ -102,27 +114,29 @@ Products
                    </thead>
 
                         <tbody>
+                            @foreach($company->products as $product)
                             <tr>
-                                <td>Sample<br>PHP 1.0</td>
-                                <td>PHP 25.85</td>
-                                <td>PHP 1.25</td>
-                                <td>PHP 1.25</td>
-                                <td><button class="btn btn-info btn-sm"><i class="far fa-edit"></i></button></td>
+                            <td>
+                                @if($product->picture=="noimage.png")
+                                <img class="" src="{{ asset('images/noimage.png') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;"> 
+                                @else
+                                <img class="" src="{{ asset('images/'.$product->company_id.'/'.$product->picture.'') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;">
+                                @endif
+                                <br>
+                                {{$product->name}}
+                            </td>
+                            @foreach($company->categories as $category)
+                            @if($category->id==$product->category_id)
+                            <td>{{$category->name}}</td>
+                            @else
+                            <td>Null</td>
+                            @endif
+                            @endforeach
+                                <td>PHP {{$product->stock_price}}</td>
+                                <td>PHP {{$product->retail_price}}</td>
+                                <td><button class="btn btn-info btn-sm" onclick="editProduct({{$product->id}})"><i class="far fa-edit"></i></button></td>
                             </tr>
-                            <tr>
-                                <td>Sample2<br>PHP 1.0</td>
-                                <td>PHP 25.85</td>
-                                <td>PHP 2.50</td>
-                                <td>PHP 2.50</td>
-                                <td><button class="btn btn-info btn-sm"><i class="far fa-edit"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Sample2<br>PHP 1.0</td>
-                                <td>PHP 25.85</td>
-                                <td>PHP 2.50</td>
-                                <td>PHP 2.50</td>
-                                <td><button class="btn btn-info btn-sm"><i class="far fa-edit"></i></button></td>
-                            </tr>
+                            @endforeach
                         </tbody>
                 
                 </table>
@@ -130,22 +144,10 @@ Products
     </div>
     
     <div id="menu1" class="tab-pane fade">
-        <div class="alert alert-success" id="results" style="display:none;">
+        <div class="alert row" id="results" style="display:none;">
         </div>
       <div class="row" id="searchBarDiv">
-            <div class="form-group col-md-5" style="margin: 0;">
-            <div id="imaginary_container"> 
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control search-value"  placeholder="Search" >
-                        <span class="input-group-addon">
-                            <button type="submit" class="clear-search">
-                                <i class="fas fa-times"></i>
-                            </button>  
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="com-md-5">
+            <div class="col-md-5">
                 <button type="button" class="btn btn-success" id="showCategory"><i class="fas fa-plus"></i> Add New Category</button>
             </div>
         </div>
@@ -154,14 +156,14 @@ Products
             <div class="col-md-3">
                 <input type="text" class="form-control" placeholder="Add Category Name" id="categoryValue">
             </div>
-            <div class="col-md-5" style="padding: 0;">
+            <div class="col-md-6" style="padding: 0;">
                 <button type="button" class="btn btn-success" id="addCategory"><i class="fas fa-file-alt"></i> Save</button>
                 <button type="button" class="btn btn-danger" id="hideCategoryDiv"><i class="fas fa-times"></i> Cancel</button>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-6">
             <table class="table table-striped table-responsive loadDiv">
                     <thead style="background-color: #ddccdf; color: #3c0045;">
                         <th>Category No.</th>
@@ -187,8 +189,7 @@ Products
         </div>
     </div>
     <div id="menu2" class="tab-pane fade">
-      <h3>Inventory</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+      <h2>This feature is exclusive for <strong>premium accounts</strong>.</h2>
     </div>
   </div>
 </div>
@@ -196,23 +197,83 @@ Products
 {{-- modal --}}
 <div class="modal fade" id="addItem" role="dialog">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add New Item</h4>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add New Item</h4>                
         </div>
-        <div class="modal-body">
-          <p>This is a large modal.</p>
+        <div class="modal-body row" style="margin: 0;">
+            @if($company->categories->isEmpty())
+                <h4>Your category list is empty. Add new category first!</h4>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
+            @else
+            <form class="form-horizontal" action="{{url('products/additem')}}" method="POST" enctype="multipart/form-data">
+                {{csrf_field()}}
+
+                <div class="col-md-12 form-group">
+                    <label>Product Name <small>(Unique)</small></label>
+                    <input name="name" class="form-control" type="text" required>
+                </div>
+                
+                <div class="col-md-12 form-group">
+                    <label>Category</label>
+                    <select class="form-control" name="category">
+                        @foreach($company->categories as $key => $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Picture <small>(Optional and Up to 5MB only)</small></label>
+                    <input type="file" class="form-control" name="picture">
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Stock Price</label>
+                        <input name="stock_price" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Retail Price</label>
+                        <input name="retail_price" class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label>Stock Quantity</label>
+                        <input name="stocks" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Stock Unit (kg, pcs, box)</label>
+                        <input name="stock_unit" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Reorder Point</label>
+                        <input name="reorder_point" class="form-control" type="text">
+                    </div>
+                </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Save</button>
+        </div>
+        </form>
+        @endif
       </div>
     </div>
   </div>
   
-<div class="modal fade" id="editCategoryModal" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade modal-center" id="editCategoryModal" role="dialog">
+    <div class="modal-dialog modal-dialog-center">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -237,6 +298,14 @@ Products
 @section('scripts')
 <script>
     $(document).ready(function(){
+        // $(':button[onclick="updateCategory()"]').prop('disabled', true);
+
+        // $('#categoryName').on('keyup', function(){
+        //     // console.log($(this).val());
+        //     console.log($('#categoryName').val());
+        //     $(':button[onclick="updateCategory()"]').prop('disabled', false);
+        // });
+
         $('.clear-search').on('click', function(){
             $('.search-value').val('');
         });
@@ -256,23 +325,28 @@ Products
             { name: categoryValue, 
             _token: "{{csrf_token()}}" },
             function(data, status) {
-                $('#searchBarDiv').show();
-                $('#addCategoryDiv').hide();
-                $('#categoryValue').val('');
+                
                 $('.loadDiv').load(window.location.href +' .loadDiv');
                 if(data=='success'){
-                    $('#results').html('Category has successfully added');
-                    $('#results').delay(500).fadeIn('normal', function() {
+                    $('#results').html('New category has been <strong>successfully created!</strong>');
+                    $('#results').removeClass('alert-danger');
+                    $('#results').addClass('alert-success');
+                    $('#results').delay(100).fadeIn('normal', function() {
                         $(this).delay(2500).fadeOut();
                     });
                 } else {
-                    $('#results').html('Category has successfully added');
-                    $('#results').delay(500).fadeIn('normal', function() {
+                    $('#results').html('"'+data+'" category has already been <strong>added!</strong>');
+                    $('#results').removeClass('alert-success');
+                    $('#results').addClass('alert-danger');
+                    $('#results').delay(100).fadeIn('normal', function() {
                         $(this).delay(2500).fadeOut();
                     });
                 }
             
             });
+            $('#searchBarDiv').show();
+            $('#addCategoryDiv').hide();
+            $('#categoryValue').val('');
             
             // $('#results').show();
         });
@@ -290,12 +364,27 @@ Products
 	 			{ id: test, 
                   _token: "{{csrf_token()}}"},
 	 			function(data, status) {
+                     console.log(data);
+                     console.log(status);
+                $('.loadDiv').load(window.location.href +' .loadDiv');
+                     if(data=='true') {
+                        $('#results').html('The category was successfully deleted!');
+                        $('#results').removeClass('alert-danger');
+                        $('#results').addClass('alert-success');
+                        $('#results').delay(500).fadeIn('normal', function() {
+                            $(this).delay(2500).fadeOut();
+                        });
+                     } else {
+                        console.log(data);
+                        $('#results').html('This category cannot be deleted!');
+                        $('#results').removeClass('alert-success');
+                        $('#results').addClass('alert-danger');
+                        $('#results').delay(500).fadeIn('normal', function() {
+                            $(this).delay(2500).fadeOut();
+                        });
+                     }
 	 			});
-	 		$('.loadDiv').load(window.location.href +' .loadDiv');
-            $('#results').html('Category has successfully deleted');
-            $('#results').delay(500).fadeIn('normal', function() {
-                $(this).delay(2500).fadeOut();
-            });
+            
     }
 
     function editCategory(categoryID, categoryName) {
@@ -311,12 +400,27 @@ Products
                   name: category_name, 
                   _token: "{{csrf_token()}}"},
 	 			function(data, status) {
+                     if(data=='success'){
+                    $('#results').html('The category has been <strong>successfully updated!</strong>');
+                    $('#results').removeClass('alert-danger');
+                    $('#results').addClass('alert-success');
+                    $('#results').delay(100).fadeIn('normal', function() {
+                        $(this).delay(2500).fadeOut();
+                    });
+                } else {
+                    $('#results').html('"'+data+'" category has already been <strong>added!</strong>');
+                    $('#results').removeClass('alert-success');
+                    $('#results').addClass('alert-danger');
+                    $('#results').delay(100).fadeIn('normal', function() {
+                        $(this).delay(2500).fadeOut();
+                    });
+                }
 	 			});
 	 	$('.loadDiv').load(window.location.href +' .loadDiv');
-         $('#results').html('Category name has successfully updated');
-            $('#results').delay(500).fadeIn('normal', function() {
-                $(this).delay(2500).fadeOut();
-            });
+    }
+
+    function editProduct(id){
+        alert(id);
     }
 
 </script>

@@ -19,26 +19,39 @@ class CategoryController extends Controller
         $id = Auth::user()->company_id;
         $unique =['name' => $request->name, 'company_id' => $id];
 
-        if(Category::where($unique)->first()){
-            echo 'meron na! ibang cetegory name naman!';
+        if(!Category::where($unique)->first()){
+            $new_category = new Category();
+            $new_category->company_id = $id;
+            $new_category->name = $request->name;
+            $new_category->save();
+            echo 'success';
         } else {
-            echo 'Available pa sya sis! pwede mo syang gamitin na category name';
+           echo $request->name; 
         }
-        // $new_category = new Category();
-        // $new_category->company_id = $id;
-        // $new_category->name = $request->name;
-        // $new_category->save();
         // echo $var . ' ' . $request->name;
     }
 
     function delete(Request $request) {
         $category = Category::find($request->id);
-        $category->delete();
+        try{
+            $category->delete();
+            echo 'true';
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
     }
     
     function update(Request $request) {
-        $category = Category::find($request->id);
-        $category->name = $request->name; 
-        $category->save();
+        $id = Auth::user()->company_id;
+        $unique =['name' => $request->name, 'company_id' => $id];
+        
+        if(!Category::where($unique)->first()){
+            $category = Category::find($request->id);
+            $category->name = $request->name; 
+            $category->save();    
+            echo 'success';
+        } else {
+           echo $request->name; 
+        }        
     }
 }

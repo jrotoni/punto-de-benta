@@ -25,7 +25,6 @@ class SaleController extends Controller
         $sale->user_id = $user_id;
         $sale->total_sales = $request->total_amount;
         $sale->save();
-        // return redirect()->back();
         
         $sale_id = Sale::where('user_id',$user_id)->orderBy('created_at', 'desc')->first()->id;
         $cart_items = Cart::where('user_id', $user_id)->get();

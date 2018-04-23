@@ -20,6 +20,48 @@
   text-align: left;
   vertical-align: middle;
 }
+
+.productbox {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ff652f;
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  /* transition effect. not necessary */
+  transition: opacity .2s, visibility .2s;
+}
+
+.productbox:hover .overlay {
+  height: 100%;
+  visibility: visible;
+  opacity: 0.9;
+}
+
+.text {
+    transition: .2s;
+  transform: translateY(1em);
+}
+
+.productbox:hover .text {
+    transform: translateY(0);
+}
+
 </style>
 @endsection
 
@@ -108,33 +150,36 @@ Products
                     <thead style="background-color: #ddccdf; color: #3c0045;">
                         <th>Product</th>
                         <th>Category</th>
-                        <th>Stock Price</th>
-                        <th>Retail Price</th>
+                        <th>Prices</th>
                         <th>Action</th>
                    </thead>
 
                         <tbody>
                             @foreach($company->products as $product)
                             <tr>
-                            <td>
+                            <td style="vertical-align: middle;">
+                                <div class="productbox" style="vertical-align: middle;">
                                 @if($product->picture=="noimage.png")
-                                <img class="" src="{{ asset('images/noimage.png') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;"> 
+                                <img class="image" src="{{ asset('images/noimage.png') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;"> 
                                 @else
-                                <img class="" src="{{ asset('images/'.$product->company_id.'/'.$product->picture.'') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;">
+                                <img class="image" src="{{ asset('images/'.$product->company_id.'/'.$product->picture.'') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;">
                                 @endif
-                                <br>
+                                <div class="overlay" onclick="alert('{{$product->id}}');">
+                                        <div class="text"><i class="far fa-images"></i> Change Picture</div>
+                                    </div>
+                                </div>
                                 {{$product->name}}
                             </td>
                             @foreach($company->categories as $category)
                             @if($category->id==$product->category_id)
-                            <td>{{$category->name}}</td>
+                            <td style="vertical-align: middle;">{{$category->name}}</td>
                             @else
-                            <td>Null</td>
+                            <td style="vertical-align: middle;">Null</td>
                             @endif
                             @endforeach
-                                <td>PHP {{$product->stock_price}}</td>
-                                <td>PHP {{$product->retail_price}}</td>
-                                <td><button class="btn btn-info btn-sm" onclick="editProduct({{$product->id}})"><i class="far fa-edit"></i></button></td>
+                                <td style="vertical-align: middle;">Stock: PHP {{$product->stock_price}}<br>
+                                Retail: PHP {{$product->retail_price}}</td>
+                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct({{$product->id}})"><i class="far fa-edit"></i></button></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -274,24 +319,24 @@ Products
   
 <div class="modal fade modal-center" id="editCategoryModal" role="dialog">
     <div class="modal-dialog modal-dialog-center">
-      <div class="modal-content">
+        <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Category</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Category</h4>
         </div>
         <input type="hidden" id="hiddenCategoryID">
         <div class="modal-body" id="editCategoryModalBody">
-          <input type="text" id="categoryName" class="form-control">
+            <input type="text" id="categoryName" class="form-control">
         </div>
         <div class="modal-footer">
             {{-- <p class="pull-left" onclick="removeCategory('{{$category->id}}')"></p> --}}
             <button type="button" class="btn btn-danger pull-left" onclick="removeCategory()" data-dismiss="modal"><i class="fas fa-times"></i> Delete this category</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-success" onclick="updateCategory()" data-dismiss="modal"><i class="fas fa-file-alt"></i> Save Changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" onclick="updateCategory()" data-dismiss="modal"><i class="fas fa-file-alt"></i> Save Changes</button>
         </div>
-      </div>
+        </div>
     </div>
-  </div>    
+</div>    
 
 @endsection
 

@@ -31,7 +31,7 @@
 		<div class="header">
 			<div class="logo">
 				<!-- <i class="fa fa-tachometer"></i> -->
-				<a style="font-family: 'Pacifico', cursive; color: #ffcd81; text-decoration: none;" href="{{ url('/') }}">Punto de Benta</a>
+				<a style="font-family: 'Pacifico', cursive; color: #ffcd81; text-decoration: none;" href="{{ url('/') }}">.dBenta</a>
 			</div>
 			<a href="#" class="nav-trigger"><span></span></a>
 		</div>

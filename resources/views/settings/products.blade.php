@@ -149,7 +149,7 @@ Products
             <table class="table table-striped table-responsive">
                     <thead style="background-color: #ddccdf; color: #3c0045;">
                         <th>Product</th>
-                        <th>Category</th>
+                        {{-- <th>Category</th> --}}
                         <th>Prices</th>
                         <th>Action</th>
                    </thead>
@@ -164,22 +164,22 @@ Products
                                 @else
                                 <img class="image" src="{{ asset('images/'.$product->company_id.'/'.$product->picture.'') }}" alt="{{$product->name}}" height="100" width="100" style="margin: 0 auto;">
                                 @endif
-                                <div class="overlay" onclick="alert('{{$product->id}}');">
+                                <div class="overlay" onclick="editProductPicture('{{$product->id}}');" data-toggle="modal" data-target="#editProductPicture">
                                         <div class="text"><i class="far fa-images"></i> Change Picture</div>
                                     </div>
                                 </div>
                                 {{$product->name}}
                             </td>
-                            @foreach($company->categories as $category)
+                            {{-- @foreach($company->categories as $category)
                             @if($category->id==$product->category_id)
                             <td style="vertical-align: middle;">{{$category->name}}</td>
                             @else
                             <td style="vertical-align: middle;">Null</td>
                             @endif
-                            @endforeach
+                            @endforeach --}}
                                 <td style="vertical-align: middle;">Stock: PHP {{$product->stock_price}}<br>
                                 Retail: PHP {{$product->retail_price}}</td>
-                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct({{$product->id}})"><i class="far fa-edit"></i></button></td>
+                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct({{$product->id}})" data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></button></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -289,7 +289,7 @@ Products
                     </div>
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <div class="col-md-4">
                         <label>Stock Quantity</label>
                         <input name="stocks" class="form-control" type="text">
@@ -304,7 +304,7 @@ Products
                         <label>Reorder Point</label>
                         <input name="reorder_point" class="form-control" type="text">
                     </div>
-                </div>
+                </div> --}}
 
         </div>
         <div class="modal-footer">
@@ -338,6 +338,108 @@ Products
     </div>
 </div>    
 
+<div class="modal fade modal-center" id="editProductPicture" role="dialog">
+    <div class="modal-dialog modal-dialog-center">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Product Picture</h4>
+        </div>
+        <form action="{{url('products/updatepicture')}}" method="POST" enctype="multipart/form-data">
+                {{csrf_field()}}
+        <input type="hidden" id="hiddenProductID" name="product_id">        
+        <div class="modal-body form-group">
+            <label>Picture <small>(Optional and Up to 5MB only)</small></label>
+            <input type="file" class="form-control" name="picture">
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Save Changes</button>
+        </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editItem" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Item</h4>                
+        </div>
+        <div class="modal-body row" style="margin: 0;">
+            @if($company->categories->isEmpty())
+                <h4>Your category list is empty. Add new category first!</h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+            @else
+            <form class="form-horizontal" action="{{url('products/additem')}}" method="POST" enctype="multipart/form-data">
+                {{csrf_field()}}
+
+                <div class="col-md-12 form-group">
+                    <label>Product Name <small>(Unique)</small></label>
+                    <input name="name" class="form-control" type="text" required>
+                </div>
+                
+                <div class="col-md-12 form-group">
+                    <label>Category</label>
+                    <select class="form-control" name="category">
+                        @foreach($company->categories as $key => $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Picture <small>(Optional and Up to 5MB only)</small></label>
+                    <input type="file" class="form-control" name="picture">
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Stock Price</label>
+                        <input name="stock_price" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Retail Price</label>
+                        <input name="retail_price" class="form-control" type="text">
+                    </div>
+                </div>
+
+                {{-- <div class="form-group">
+                    <div class="col-md-4">
+                        <label>Stock Quantity</label>
+                        <input name="stocks" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Stock Unit (kg, pcs, box)</label>
+                        <input name="stock_unit" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Reorder Point</label>
+                        <input name="reorder_point" class="form-control" type="text">
+                    </div>
+                </div> --}}
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Save</button>
+        </div>
+        </form>
+        @endif
+      </div>
+    </div>
+  </div>
+
+
 @endsection
 
 @section('scripts')
@@ -370,6 +472,7 @@ Products
             { name: categoryValue, 
             _token: "{{csrf_token()}}" },
             function(data, status) {
+
                 
                 $('.loadDiv').load(window.location.href +' .loadDiv');
                 if(data=='success'){
@@ -403,14 +506,18 @@ Products
         // });
     })
 
+    function editProductPicture(id) {
+        $('#hiddenProductID').val(id);
+    }
+
     function removeCategory() {
         var test = $('#hiddenCategoryID').text();
 	 		$.post('/products/removecategory',
 	 			{ id: test, 
                   _token: "{{csrf_token()}}"},
 	 			function(data, status) {
-                     console.log(data);
-                     console.log(status);
+                    //  console.log(data);
+                    //  console.log(status);
                 $('.loadDiv').load(window.location.href +' .loadDiv');
                      if(data=='true') {
                         $('#results').html('The category was successfully deleted!');
@@ -465,8 +572,22 @@ Products
     }
 
     function editProduct(id){
-        alert(id);
+        // console.log(id);
+        $.post('/products/edititem',
+	 			{ product_id: id, 
+                  _token: "{{csrf_token()}}"},
+	 			function(data, status) {
+                    // console.log(data.category);
+                    //  data = JSON.decode(data);
+                    // console.log(data.category);
+                    data = JSON.parse(data);
+                    console.log(data.category);
+                    console.log(data.name);
+	 			});
     }
 
+// data = JSON.parse(data);
+// data.company_id;
+// data.name;
 </script>
 @endsection

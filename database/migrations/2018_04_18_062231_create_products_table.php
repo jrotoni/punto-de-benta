@@ -20,9 +20,9 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->decimal('stock_price', 8, 2);
             $table->decimal('retail_price', 8, 2);
-            $table->integer('stocks');
-            $table->string('stock_unit');
-            $table->integer('reorder_point');
+            $table->integer('stocks')->nullable();
+            $table->string('stock_unit')->nullable();
+            $table->integer('reorder_point')->nullable();
             $table->text('picture')->nullable();
             $table->timestamps();
 

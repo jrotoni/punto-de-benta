@@ -19,7 +19,7 @@
     {{-- fontawesome --}}
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
 </head>
-<body>
+<body onload="startTime()">
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -34,7 +34,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                     <a class="navbar-brand" style="font-family: 'Pacifico', cursive; color: #ffcd81; font-size: 3rem; margin-left: 0;" href="{{ url('/') }}">.dBenta</a>
+                     <a class="navbar-brand" style="display: none; font-family: 'Pacifico', cursive; color: #ffcd81; font-size: 3rem; margin-left: 0;" href="{{ url('/') }}">.dBenta</a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">

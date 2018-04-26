@@ -166,13 +166,17 @@ th, td {
                 
                 </table>
             </div>
-            <div class="panel panel-success" style="margin-bottom:0;">
-                <div class="panel-body">
+            <div class="panel panel-default" style="margin-bottom:0; min-height: 24vh; display: flex;">
+                <div class="panel-body" id="purchaseBody" style="margin: 0 auto; display:none;">
                     <div class="text-center">
                     <h2>Total Amount: <strong>PHP <span id="totalamount"></span></strong></h2>
                         <h5 id="quantityItems">No. of Items: <span id="items"></span> | Total Quantity: <span id="quantity"></span></h5>
-                    </div>
-                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal" onclick="checkout()" id="purchasebtn" disabled><i class="fas fa-shopping-cart"></i> Purchase</button>
+                    </div>                    
+                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal" onclick="checkout()" id="purchasebtn"><i class="fas fa-shopping-cart"></i> Purchase</button>
+                </div>
+
+                <div class="panel-body" id="clockBody" style="margin: 0 auto;">
+                    <h2 id="Clock" style="font-size:80px; font-weight:600;"></h2>
                 </div>
             </div>
         </div> {{-- //col-md-4 --}}
@@ -251,6 +255,26 @@ th, td {
     compute();
     })
 
+    function startTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12;
+        h = h ? h : 12;
+        // document.getElementById('Clock').innerHTML =
+        // h + ":" + m + ":" + s + ' ' + ampm;
+        $('#Clock').html(h + ":" + m + ":" + s + ' ' + ampm);
+        var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+    }
+
     function compute() {
         var totalamount = 0;
         var totalitems = 0;
@@ -276,9 +300,13 @@ th, td {
         $('#items').text(totalitems);
 
         if(totalitems!=0){
-            $('#purchasebtn').removeAttr('disabled','disabled');
+            // $('#purchasebtn').removeAttr('disabled','disabled');
+            $('#purchaseBody').show();
+            $('#clockBody').hide();
         } else {
-            $('#purchasebtn').attr('disabled','disabled');
+            $('#clockBody').show();
+            $('#purchaseBody').hide();
+            // $('#purchasebtn').attr('disabled','disabled');
         }
     }
 

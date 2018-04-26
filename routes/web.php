@@ -26,6 +26,7 @@ Route::get('/staff', function () {
 Route::get('/products', 'ProductController@show');
 Route::post('/products/additem', 'ProductController@additem');
 Route::post('/products/edititem', 'ProductController@edititem');
+Route::post('/products/deleteitem', 'ProductController@deleteitem');
 Route::post('/products/updatepicture', 'ProductController@updatepicture');
 Route::post('/products/updateitem', 'ProductController@updateitem');
 Route::get('/products/search', 'ProductController@search');

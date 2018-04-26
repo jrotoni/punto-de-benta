@@ -135,6 +135,11 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    function deleteitem(Request $request) {
+        $product = Product::Find($request->product_id);
+        $product->delete();
+    }
+
     function search(Request $request) {
         $output='';
         $id = Auth::user()->company_id;

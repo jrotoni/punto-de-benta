@@ -427,6 +427,7 @@ Products
 
         </div>
         <div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" onclick="deleteProduct()" data-dismiss="modal"><i class="fas fa-times"></i> Delete this item</button>
             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Cancel</button>
             <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Save</button>
         </div>
@@ -502,6 +503,16 @@ Products
         //     $('#editCategoryModalBody').html(categoryID);
         // });
     })
+
+    function deleteProduct(){
+       var id = $('#hideproductID').val();
+       $.post('/products/deleteitem',
+	 			{ product_id: id, 
+                  _token: "{{csrf_token()}}"},
+	 			function(data, status) {
+                    window.location.reload();
+	 			});
+    }
 
     function editProductPicture(id) {
         $('#hiddenProductID').val(id);

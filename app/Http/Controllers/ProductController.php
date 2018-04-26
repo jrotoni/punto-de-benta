@@ -235,4 +235,107 @@ class ProductController extends Controller
             return response($output);
         }
     }
+
+    function searchitems(Request $request){
+        $output='';
+        $id = Auth::user()->company_id;
+        
+        if($request->category!=0){
+            $products = Product::where('name','LIKE','%'.$request->search.'%')->where('company_id', '=', $id)->where('category_id', '=', $request->category)->get();
+        } else {
+            $products = Product::where('name','LIKE','%'.$request->search.'%')->where('company_id', '=', $id)->get();
+        }
+        
+        if($products) {
+            foreach($products as $product) {
+                if($product->picture=="noimage.png"){
+                    $output .= '
+                        <tr>
+                            <td style="vertical-align: middle;">
+                                <div class="productbox" style="vertical-align: middle;">
+                                <img class="image" src="'. asset('images/noimage.png') .'" alt="'.$product->name.'" height="100" width="100" style="margin: 0 auto;"> 
+                                <div class="overlay" onclick="editProductPicture('.$product->id.');" data-toggle="modal" data-target="#editProductPicture">
+                                        <div class="text"><i class="far fa-images"></i> Change Picture</div>
+                                    </div>
+                                </div>
+                                '.$product->name.'
+                            </td>
+                                <td style="vertical-align: middle;">Stock: PHP '.$product->stock_price.'<br>
+                                Retail: PHP '.$product->retail_price.'</td>
+                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct('.$product->id.')" data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></button></td>
+                            </tr>
+                    ';
+                } else {
+                    $output .= '
+                        <tr>
+                            <td style="vertical-align: middle;">
+                                <div class="productbox" style="vertical-align: middle;">
+                                <img class="image" src="'. asset('images/'.$product->company_id.'/'.$product->picture.'') .'" alt="'.$product->name.'" height="100" width="100" style="margin: 0 auto;">
+                                <div class="overlay" onclick="editProductPicture('.$product->id.');" data-toggle="modal" data-target="#editProductPicture">
+                                        <div class="text"><i class="far fa-images"></i> Change Picture</div>
+                                    </div>
+                                </div>
+                                '.$product->name.'
+                            </td>
+                                <td style="vertical-align: middle;">Stock: PHP '.$product->stock_price.'<br>
+                                Retail: PHP '.$product->retail_price.'</td>
+                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct('.$product->id.')" data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></button></td>
+                            </tr>
+                    ';
+                }
+            }
+            return response($output);
+        }
+    }
+
+    function searchcategory(Request $request){
+        $output='';
+        if($request->search!=0){
+            $products = Product::where('category_id', $request->search)->get();
+        } else {
+            $id = Auth::user()->company_id;
+            $products = Product::where('company_id', $id)->get();
+        }
+
+        if($products) {
+            foreach($products as $product) {
+                if($product->picture=="noimage.png"){
+                    $output .= '
+                        <tr>
+                            <td style="vertical-align: middle;">
+                                <div class="productbox" style="vertical-align: middle;">
+                                <img class="image" src="'. asset('images/noimage.png') .'" alt="'.$product->name.'" height="100" width="100" style="margin: 0 auto;"> 
+                                <div class="overlay" onclick="editProductPicture('.$product->id.');" data-toggle="modal" data-target="#editProductPicture">
+                                        <div class="text"><i class="far fa-images"></i> Change Picture</div>
+                                    </div>
+                                </div>
+                                '.$product->name.'
+                            </td>
+                                <td style="vertical-align: middle;">Stock: PHP '.$product->stock_price.'<br>
+                                Retail: PHP '.$product->retail_price.'</td>
+                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct('.$product->id.')" data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></button></td>
+                            </tr>
+                    ';
+                } else {
+                    $output .= '
+                        <tr>
+                            <td style="vertical-align: middle;">
+                                <div class="productbox" style="vertical-align: middle;">
+                                <img class="image" src="'. asset('images/'.$product->company_id.'/'.$product->picture.'') .'" alt="'.$product->name.'" height="100" width="100" style="margin: 0 auto;">
+                                <div class="overlay" onclick="editProductPicture('.$product->id.');" data-toggle="modal" data-target="#editProductPicture">
+                                        <div class="text"><i class="far fa-images"></i> Change Picture</div>
+                                    </div>
+                                </div>
+                                '.$product->name.'
+                            </td>
+                                <td style="vertical-align: middle;">Stock: PHP '.$product->stock_price.'<br>
+                                Retail: PHP '.$product->retail_price.'</td>
+                                <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct('.$product->id.')" data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></button></td>
+                            </tr>
+                    ';
+                }
+            }
+            return response($output);
+        }
+    }
 }

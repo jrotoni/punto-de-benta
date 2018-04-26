@@ -57,13 +57,13 @@ body {
   text-align: center;
 }
 
-.modal.fade .modal-dialog {
+/* .modal.fade .modal-dialog {
   transform: translate3d(0, 100vh, 0);
 }
 
 .modal.in .modal-dialog {
   transform: translate3d(0, 0, 0);
-}
+} */
 
 .fill {
     position:relative;
@@ -87,6 +87,25 @@ body {
 
 th, td {
     text-align: center;
+}
+
+.modal-center {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal-center:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog-center {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
 }
 
 </style>
@@ -166,19 +185,19 @@ th, td {
                 
                 </table>
             </div>
-            <div class="panel panel-default" style="margin-bottom:0; min-height: 24vh; display: flex;">
-                <div class="panel-body" id="purchaseBody" style="margin: 0 auto; display:none;">
-                    <div class="text-center">
+            <div class="panel panel-default" style="margin-bottom:0; min-height: 23vh; display: flex;">
+                <div class="panel-body" id="purchaseBody" style="margin: auto auto; display:none;">
+                    <div class="text-center" style="vertical-align:middle;">
                     <h2>Total Amount: <strong>PHP <span id="totalamount"></span></strong></h2>
                         <h5 id="quantityItems">No. of Items: <span id="items"></span> | Total Quantity: <span id="quantity"></span></h5>
                     </div>                    
                     <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal" onclick="checkout()" id="purchasebtn"><i class="fas fa-shopping-cart"></i> Purchase</button>
                 </div>
 
-                <div class="panel-body" id="clockBody" style="margin: 0 auto;">
+                <div class="panel-body" id="clockBody" style="margin: auto auto;">
                     <div class="text-center">
                         <h2 id="Clock" style="font-size:55px; font-weight:600;"></h2>
-                        <h4>Thursday | April 26, 2018</h4>    
+                        <h4><span id="dayTime"></span> | <span id="dateTime"></span></h4>    
                     </div>
                 </div>
             </div>
@@ -187,8 +206,8 @@ th, td {
 </div> {{-- //container-fluid --}}
 
 {{-- modal --}}
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade modal-center" id="myModal" role="dialog">
+    <div class="modal-dialog modal-dialog-center">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><i class="fas fa-window-close"></i></button>
@@ -268,10 +287,37 @@ th, td {
         var ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12;
         h = h ? h : 12;
-        // document.getElementById('Clock').innerHTML =
-        // h + ":" + m + ":" + s + ' ' + ampm;
         $('#Clock').html(h + ":" + m + ":" + s + ' ' + ampm);
         var t = setTimeout(startTime, 500);
+
+        var weekday = new Array(7);
+        weekday[0] = "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wednesday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+
+        var n = weekday[today.getDay()];
+        $('#dayTime').html(n);
+
+        var month = new Array(12);
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        var day = today.getDate();
+        var year = today.getFullYear();
+        $('#dateTime').html(month[today.getMonth()] +' '+day+', '+year);
     }
     function checkTime(i) {
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10

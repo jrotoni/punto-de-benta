@@ -15,9 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/sales', function () {
-    return view('settings/sales');
-});
+Route::get('/sales', 'SaleController@show');
 
 Route::get('/staff', function () {
     return view('settings/staff');
@@ -31,6 +29,8 @@ Route::post('/products/updatepicture', 'ProductController@updatepicture');
 Route::post('/products/updateitem', 'ProductController@updateitem');
 Route::get('/products/search', 'ProductController@search');
 Route::get('/products/searchbycategory', 'ProductController@searchbycategory');
+Route::get('/products/searchitems', 'ProductController@searchitems');
+Route::get('/products/searchcategory', 'ProductController@searchcategory');
 
 Route::post('/products/addcategory', 'CategoryController@add');
 Route::post('/products/removecategory', 'CategoryController@delete');

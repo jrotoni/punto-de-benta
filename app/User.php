@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Sale;
 
 class User extends Authenticatable
 {
@@ -29,5 +30,9 @@ class User extends Authenticatable
 
     function carts() {
         return $this->hasMany('App\Cart');
+    }
+
+    public function sales() {
+        return $this->hasMany('App\Sale');
     }
 }

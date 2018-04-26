@@ -41,5 +41,10 @@ class SaleController extends Controller
         }
     }
 
-    
+    function show() {
+        $id = Auth::user()->company_id;
+        $company = Company::Find($id);
+        // $company = Company::with('sales')->where('id','=',$id)->get();
+        return view('settings.sales', compact('company'));
+    }    
 }

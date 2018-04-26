@@ -116,10 +116,10 @@ Products
                 </div>
             @endif
             <div class="form-group col-md-2 col-sm-12" style="margin: 0; padding: 0;">
-                <select class="form-control" name="category">
-                    <option>All</option>
+                <select class="form-control" name="category" id="changeCategory">
+                    <option value="0">All</option>
                     @foreach($company->categories as $key => $category)
-                    <option>{{$category->name}}</option>
+                    <option value="{{$category->id}}">{{$category->name}}</option>
                         {{-- if ($value==$_GET['category']) {
                             echo '<option selected>'.$value.'</option>';	
                         } else {
@@ -131,7 +131,7 @@ Products
             <div class="form-group col-md-5" style="margin: 0;">
             <div id="imaginary_container"> 
                     <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control search-value"  placeholder="Search" >
+                        <input type="text" class="form-control search-value"  placeholder="Search" id="itemSearch">
                         <span class="input-group-addon">
                             <button type="submit" class="clear-search">
                                 <i class="fas fa-search"></i>
@@ -154,7 +154,7 @@ Products
                         <th>Action</th>
                    </thead>
 
-                        <tbody>
+                        <tbody id="itemList">
                             @foreach($company->products as $product)
                             <tr>
                             <td style="vertical-align: middle;">
@@ -170,13 +170,6 @@ Products
                                 </div>
                                 {{$product->name}}
                             </td>
-                            {{-- @foreach($company->categories as $category)
-                            @if($category->id==$product->category_id)
-                            <td style="vertical-align: middle;">{{$category->name}}</td>
-                            @else
-                            <td style="vertical-align: middle;">Null</td>
-                            @endif
-                            @endforeach --}}
                                 <td style="vertical-align: middle;">Stock: PHP {{$product->stock_price}}<br>
                                 Retail: PHP {{$product->retail_price}}</td>
                                 <td style="vertical-align: middle;"><button class="btn btn-info btn-sm" onclick="editProduct({{$product->id}})" data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></button></td>
@@ -450,6 +443,39 @@ Products
         //     console.log($('#categoryName').val());
         //     $(':button[onclick="updateCategory()"]').prop('disabled', false);
         // });
+        $("#itemSearch").on('keyup', function (){
+        var $category = $('#changeCategory').val();    
+        var $value=$(this).val();
+            $.ajax({
+                url: '/products/searchitems',
+                type: 'GET',
+                data: {
+                    search : $value,
+                    category: $category,
+                },
+                success: function(data) {
+                    $('#itemList').html(data);
+                    // console.log(data);
+                }
+                });
+        });
+
+        $("#changeCategory").on('change', function (){
+        $("#itemSearch").val('');
+        var $value=$(this).val();
+        console.log($value);
+            $.ajax({
+                url: '/products/searchcategory',
+                type: 'GET',
+                data: {
+                    search : $value,
+                },
+                success: function(data) {
+                    $('#itemList').html(data);
+                    // console.log(data);
+                }
+                });
+        });
 
         $('.clear-search').on('click', function(){
             $('.search-value').val('');

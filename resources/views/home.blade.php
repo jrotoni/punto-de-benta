@@ -176,7 +176,10 @@ th, td {
                 </div>
 
                 <div class="panel-body" id="clockBody" style="margin: 0 auto;">
-                    <h2 id="Clock" style="font-size:80px; font-weight:600;"></h2>
+                    <div class="text-center">
+                        <h2 id="Clock" style="font-size:55px; font-weight:600;"></h2>
+                        <h4>Thursday | April 26, 2018</h4>    
+                    </div>
                 </div>
             </div>
         </div> {{-- //col-md-4 --}}

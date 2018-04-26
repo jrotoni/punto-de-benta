@@ -27,6 +27,9 @@ Route::get('/products', 'ProductController@show');
 Route::post('/products/additem', 'ProductController@additem');
 Route::post('/products/edititem', 'ProductController@edititem');
 Route::post('/products/updatepicture', 'ProductController@updatepicture');
+Route::post('/products/updateitem', 'ProductController@updateitem');
+Route::get('/products/search', 'ProductController@search');
+Route::get('/products/searchbycategory', 'ProductController@searchbycategory');
 
 Route::post('/products/addcategory', 'CategoryController@add');
 Route::post('/products/removecategory', 'CategoryController@delete');

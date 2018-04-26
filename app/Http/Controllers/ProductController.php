@@ -104,21 +104,130 @@ class ProductController extends Controller
 
     function edititem(Request $request){
         $product = Product::Find($request->product_id);
-        $category = Category::Find($product->category_id);
-        // echo $product;
+        // if($product->category_id!=null){
+        //     $category = Category::Find($product->category_id);
+        //     $categoryname = $category->name;
+        //     $categoryid = $product->category_id;
+        // } else {
+        //     $categoryname = null;
+        //     $categoryid = null;
+        // }
+        // echo $categoryname;
 
         $array = [
-            'category' => $category->name,
-            'name' => $product->name
+            'id' => $request->product_id,
+            'name' => $product->name,
+            'stockprice' => $product->stock_price,
+            'retailprice' => $product->retail_price
         ];
         
         echo json_encode($array);
         // return response()->json(['category' => $array]);
     }
-    // $array =   [
-        //     'company_id' => $id,
-        //     'name' => $request->name
-        // ];
+
+    function updateitem(Request $request) {
+        $product = Product::Find($request->id);
+        $product->name = $request->name;
+        $product->category_id = $request->category;
+        $product->stock_price = $request->stock_price;
+        $product->retail_price = $request->retail_price;
+        $product->save();
+        return redirect()->back();
+    }
+
+    function search(Request $request) {
+        $output='';
+        $id = Auth::user()->company_id;
         
-        // echo json_encode($array);
+        if($request->category!=0){
+            $products = Product::where('name','LIKE','%'.$request->search.'%')->where('company_id', '=', $id)->where('category_id', '=', $request->category)->get();
+        } else {
+            $products = Product::where('name','LIKE','%'.$request->search.'%')->where('company_id', '=', $id)->get();
+        }   
+
+        if($products) {
+            foreach($products as $product) {
+                if($product->picture=="noimage.png"){
+                    $output .= '
+                    <div class="panel col-md-3 productbox">
+                        <div class="panel-body fill">
+                            <img class="center-block" src="'.asset('images/noimage.png').'" alt="'.$product->name.'" height="150" width="150">
+                        </div>
+                        <div class="panel-heading text-center productheading">
+                            <h4><strong id="product'.$product->id.'">'.$product->name.'</strong></h4>
+                            <p>PHP <span id="retail'.$product->id.'">'.$product->retail_price.'</span></p>
+                        </div>
+                        <div class="overlay" onclick="addtocart('.$product->id.');">
+                            <div class="text"><i class="fas fa-cart-plus"></i> Add Item</div>
+                        </div>                      
+                    </div>
+                    ';
+                } else {
+                    $output .= '
+                    <div class="panel col-md-3 productbox">
+                        <div class="panel-body fill">
+                                <img class="center-block" src="'.asset('images/'.$product->company_id.'/'.$product->picture.'').'" alt="'.$product->name.'" height="150" width="150">
+                        </div>
+                        <div class="panel-heading text-center productheading">
+                            <h4><strong id="product'.$product->id.'">'.$product->name.'</strong></h4>
+                            <p>PHP <span id="retail'.$product->id.'">'.$product->retail_price.'</span></p>
+                        </div>
+                        <div class="overlay" onclick="addtocart('.$product->id.');">
+                            <div class="text"><i class="fas fa-cart-plus"></i> Add Item</div>
+                        </div>                      
+                    </div>
+                    ';
+                }
+                
+            }
+            return response($output);
+        }
+    }
+
+    function searchbycategory(Request $request) {
+        $output='';
+        if($request->search!=0){
+            $products = Product::where('category_id', $request->search)->get();
+        } else {
+            $id = Auth::user()->company_id;
+            $products = Product::where('company_id', $id)->get();
+        }
+        if($products) {
+            foreach($products as $product) {
+                if($product->picture=="noimage.png"){
+                    $output .= '
+                    <div class="panel col-md-3 productbox">
+                        <div class="panel-body fill">
+                            <img class="center-block" src="'.asset('images/noimage.png').'" alt="'.$product->name.'" height="150" width="150">
+                        </div>
+                        <div class="panel-heading text-center productheading">
+                            <h4><strong id="product'.$product->id.'">'.$product->name.'</strong></h4>
+                            <p>PHP <span id="retail'.$product->id.'">'.$product->retail_price.'</span></p>
+                        </div>
+                        <div class="overlay" onclick="addtocart('.$product->id.');">
+                            <div class="text"><i class="fas fa-cart-plus"></i> Add Item</div>
+                        </div>                      
+                    </div>
+                    ';
+                } else {
+                    $output .= '
+                    <div class="panel col-md-3 productbox">
+                        <div class="panel-body fill">
+                                <img class="center-block" src="'.asset('images/'.$product->company_id.'/'.$product->picture.'').'" alt="'.$product->name.'" height="150" width="150">
+                        </div>
+                        <div class="panel-heading text-center productheading">
+                            <h4><strong id="product'.$product->id.'">'.$product->name.'</strong></h4>
+                            <p>PHP <span id="retail'.$product->id.'">'.$product->retail_price.'</span></p>
+                        </div>
+                        <div class="overlay" onclick="addtocart('.$product->id.');">
+                            <div class="text"><i class="fas fa-cart-plus"></i> Add Item</div>
+                        </div>                      
+                    </div>
+                    ';
+                }
+                
+                }
+            return response($output);
+        }
+    }
 }

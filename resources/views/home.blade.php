@@ -24,6 +24,10 @@ body {
   height: auto;
 }
 
+.productbox {
+    padding: 0 10px;
+}
+
 .overlay {
   position: absolute;
   top: 0;
@@ -67,12 +71,18 @@ body {
     display:flex;
     justify-content:center;
     align-items:center;
-    overflow:hidden
+    overflow:hidden;
+    padding: 0; min-height: 50%; max-height:50%;
 }
+
 .fill img {
     flex-shrink:0;
     min-width:100%;
     min-height:100%
+}
+
+.productheading {
+    padding: 0; color: #3c0045; line-height: 0;
 }
 
 th, td {
@@ -88,10 +98,10 @@ th, td {
             <div class="panel panel-default" style="">
                 <div class="panel-heading" style="background-color: #ddccdf;">
                     <div class="form-group col-md-4 col-sm-12" style="margin: 0;">
-                        <select class="form-control" name="category">
-                            <option>All</option>
+                        <select class="form-control" name="category" id="changeCategory">
+                            <option value="0">All</option>
                             @foreach($company->categories as $key => $category)
-                            <option>{{$category->name}}</option>
+                            <option value="{{$category->id}}">{{$category->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -99,7 +109,7 @@ th, td {
                     <div class="form-group" style="margin: 0;">
                     <div id="imaginary_container"> 
                             <div class="input-group stylish-input-group">
-                                <input type="text" class="form-control"  placeholder="Search" >
+                                <input type="text" class="form-control"  placeholder="Search" id="itemSearch">
                                 <span class="input-group-addon">
                                     <button type="submit">
                                         <i class="fas fa-search"></i>
@@ -109,20 +119,19 @@ th, td {
                         </div>
                     </div>
                 </div>
-                <div class="panel-body" style="height:79vh; overflow-y:auto;">
+                <div class="panel-body" style="height:79vh; overflow-y:auto;" id="itemList">
                     @foreach($company->products as $product)
-                    <div class="panel col-md-3 productbox" style="padding: 0 10px;">
-                        <div class="panel-body fill" style="padding: 0; min-height: 50%; max-height:50%;">
+                    <div class="panel col-md-3 productbox">
+                        <div class="panel-body fill">
                             @if($product->picture=="noimage.png")
                                 <img class="center-block" src="{{ asset('images/noimage.png') }}" alt="{{$product->name}}" height="150" width="150"> 
                                 @else
                                 <img class="center-block" src="{{ asset('images/'.$product->company_id.'/'.$product->picture.'') }}" alt="{{$product->name}}" height="150" width="150">
                                 @endif
-                            {{-- <img class="img-responsive hovfx" src="{{ asset('images/noimage.png') }}" alt="No Image" style="width:100%;"> --}}
                         </div>
-                        <div class="panel-heading text-center" style="padding: 0; color: #3c0045; line-height: 0;">
-                            <h4><strong>{{$product->name}}</strong></h4>
-                            <p>PHP {{$product->retail_price}}</p>
+                        <div class="panel-heading text-center productheading">
+                            <h4><strong id="product{{$product->id}}">{{$product->name}}</strong></h4>
+                            <p>PHP <span id="retail{{$product->id}}">{{$product->retail_price}}</span></p>
                         </div>
                         <div class="overlay" onclick="addtocart('{{$product->id}}');">
                             <div class="text"><i class="fas fa-cart-plus"></i> Add Item</div>
@@ -142,27 +151,17 @@ th, td {
                         <th>Action</th>
                    </thead>
 
-                        <tbody>
-                            <?php $totalamount = 0; $items=0; $quantity=0;?>
+                        <tbody id="CartTable">
                             @foreach($user->carts as $key => $item)
-                            <?php 
-                                $totalamount = $totalamount + $item->sub_amount; 
-                                $quantity = $quantity + $item->quantity;
-                            ?>
-                            <tr>
+                            <tr id="table{{$item->product_id}}" class="itemcount">
                                 <td><strong>{{$item->product_name}}</strong><br>PHP {{$item->price}}</td>
-                            <td><input type="number" min="1" value="{{floor($item->quantity)}}" class="form-control" style="width: 70px; margin: 0 auto;" oninput="updateSubtotal('{{$item->id}}',this.value, '{{$item->price}}')"></td>
-                                <td>PHP <span id="price{{$item->id}}">{{number_format($item->sub_amount, 2)}}</span></td>
-                                <td><button class="btn btn-danger btn-sm" onclick="deleteitem('{{$item->id}}');"><i class="fas fa-window-close"></i></button></td>
+                            <td><input id="input{{$item->product_id}}" type="number" min="1" value="{{floor($item->quantity)}}" class="form-control quantityamount" style="width: 70px; margin: 0 auto;" oninput="updateSubtotal('{{$item->product_id}}',this.value, '{{$item->price}}')"></td>
+                                <td>PHP <span id="price{{$item->product_id}}" class="totalamountcount">{{number_format($item->sub_amount, 2)}}</span></td>
+                                <td><button class="btn btn-danger btn-sm" onclick="deleteitem({{$item->product_id}});"><i class="fas fa-window-close"></i></button></td>
                             </tr>
                             <?php $items = $key + 1; ?>
                             @endforeach
-                            {{-- <tr>
-                                <td><strong>Sample</strong><br>PHP 1.0</td>
-                                <td><input type="number" min="1" value="1" class="form-control" style="width: 70px; margin: 0 auto;"></td>
-                                <td>PHP 1.25</td>
-                                <td><button class="btn btn-danger btn-sm"><i class="fas fa-window-close"></button></i></td>
-                            </tr> --}}
+                            
                         </tbody>
                 
                 </table>
@@ -170,10 +169,10 @@ th, td {
             <div class="panel panel-success" style="margin-bottom:0;">
                 <div class="panel-body">
                     <div class="text-center">
-                    <h2>Total Amount: <strong>PHP <span id="totalamount">{{number_format($totalamount, 2)}}</span></strong></h2>
-                        <h5 id="quantityItems">No. of Items: <span id="items">{{$items}}</span> | Total Quantity: <span id="quantity">{{$quantity}}</span></h5>
+                    <h2>Total Amount: <strong>PHP <span id="totalamount"></span></strong></h2>
+                        <h5 id="quantityItems">No. of Items: <span id="items"></span> | Total Quantity: <span id="quantity"></span></h5>
                     </div>
-                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal" onclick="checkout()"><i class="fas fa-shopping-cart"></i> Purchase</button>
+                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal" onclick="checkout()" id="purchasebtn" disabled><i class="fas fa-shopping-cart"></i> Purchase</button>
                 </div>
             </div>
         </div> {{-- //col-md-4 --}}
@@ -215,6 +214,74 @@ th, td {
 
 @section('scripts')
 <script>
+    $(document).ready(function(){
+        $("#itemSearch").on('keyup', function (){
+        var $category = $('#changeCategory').val();    
+        var $value=$(this).val();
+            $.ajax({
+                url: '/products/search',
+                type: 'GET',
+                data: {
+                    search : $value,
+                    category: $category,
+                },
+                success: function(data) {
+                    $('#itemList').html(data);
+                    // console.log(data);
+                }
+                });
+        });
+
+        $("#changeCategory").on('change', function (){
+        $("#itemSearch").val('');
+        var $value=$(this).val();
+            $.ajax({
+                url: '/products/searchbycategory',
+                type: 'GET',
+                data: {
+                    search : $value,
+                },
+                success: function(data) {
+                    $('#itemList').html(data);
+                    // console.log(data);
+                }
+                });
+        });
+
+    compute();
+    })
+
+    function compute() {
+        var totalamount = 0;
+        var totalitems = 0;
+        var totalquantity = 0;
+
+        $('.totalamountcount').each(function(){
+            var amount = $(this).text();
+            amount = amount.split(',').join('');
+            totalamount += parseFloat(amount);
+        });
+
+        $('.itemcount').each(function(){
+            totalitems += 1;
+        })
+
+        $('.quantityamount').each(function(){
+            totalquantity += parseInt($(this).val());
+        })
+
+
+        $('#totalamount').text(totalamount.toLocaleString(undefined, {minimumFractionDigits: 2}));
+        $('#quantity').text(totalquantity);
+        $('#items').text(totalitems);
+
+        if(totalitems!=0){
+            $('#purchasebtn').removeAttr('disabled','disabled');
+        } else {
+            $('#purchasebtn').attr('disabled','disabled');
+        }
+    }
+
     function salesregister(){
         var number = $('#cashoutBody').text();
         number = number.split(',').join('');
@@ -236,9 +303,7 @@ th, td {
 
         if(cash>=number){
             var change = parseFloat(cash-number);
-            // var change = parseFloat(cash-number).toFixed(2);
-            // console.log(change.toLocaleString(undefined, {maximumFractionDigits:2}));
-            $('#change').html((change).toLocaleString());
+            $('#change').html((change).toLocaleString(undefined, {minimumFractionDigits: 2}));
             $('#cashregister').removeAttr('disabled','disabled');
         } else {
             $('#change').html('0.00');
@@ -254,28 +319,65 @@ th, td {
     }
 
     function addtocart(id) {
+        if($('#table'+id).length){
+            var number = 1 + parseInt($('#input'+id).val());
+            $('#input'+id).val(number);
+
+            // console.log(parseFloat($('#retail'+id).text()));
+            var amount = $('#price'+id).text();
+            amount = amount.split(',').join('');
+            amount = parseFloat($('#retail'+id).text()) + parseFloat(amount);
+            $('#price'+id).text((amount).toLocaleString(undefined, {minimumFractionDigits: 2}));
+        
+        } else {
+        var name = $('#product'+id).text();
+        var price = $('#retail'+id).text();
+
+        $('<tr id="table'+id+'" class="itemcount">').append(
+            $('<td>').html('<strong>'+name+'</strong><br> PHP '+price),
+            $('<td>').html('<input id="input'+id+'" type="number" min="1" value="1" class="form-control quantityamount" style="width: 70px; margin: 0 auto;" oninput="updateSubtotal('+id+',this.value, '+price+')">'),
+            $('<td>').html('PHP <span id="price'+id+'" class="totalamountcount">' + parseFloat(price) +'</span>'),
+            $('<td>').html('<button class="btn btn-danger btn-sm" onclick="deleteitem('+id+');"><i class="fas fa-window-close"></i></button>')
+                ).appendTo('#CartTable');
+        }
+
         $.post('/addcart',
         { product_id: id, 
             _token: "{{ csrf_token() }}" },
         function(data, status) {
-            $('.loadTable').load(location.href +' .loadTable');
-            reload();
+
+            // data = JSON.parse(data);
+            // console.log(data.name);
+            // console.log(data.price);
+            // console.log(data.quantity);
+            // console.log(data.amount);
+            
+            // $('<tr id="table'+data.id+'">').append(
+            // $('<td>').html('<strong>'+data.name+'</strong><br> PHP '+data.price),
+            // $('<td>').html('<input type="number" min="1" value="'+data.quantity+'" class="form-control" style="width: 70px; margin: 0 auto;" oninput="updateSubtotal('+data.id+',this.value, '+data.price+')">'),
+            // $('<td>').html('PHP ' + (data.amount).toFixed(2)),
+            // $('<td>').html('<button class="btn btn-danger btn-sm" onclick="deleteitem('+data.id+');"><i class="fas fa-window-close"></i></button>')
+            //     ).appendTo('#CartTable');
+
         });
+        compute();
     }
 
-    function deleteitem(id){
+    function deleteitem(id) {
+        $('#table'+ id).remove();
         $.post('/removecart',
         { product_id: id, 
             _token: "{{ csrf_token() }}" },
         function(data, status) {
-            $('.loadTable').load(location.href +' .loadTable');
-            reload();
+            // $('.loadTable').load(location.href +' .loadTable');
+            // reload();
         });
+        compute();
     }
 
     function updateSubtotal(id, value, amount) {
         var subtotal = value*amount; 
-        $('#price'+id).html((subtotal).toLocaleString());
+        $('#price'+id).html((subtotal).toLocaleString(undefined, {minimumFractionDigits: 2}));
 
         $.post('/updatecart',
         { cart_id: id,
@@ -283,16 +385,16 @@ th, td {
           total: subtotal,
           _token: "{{ csrf_token() }}" },
         function(data, status) {
-            reload();
         });
 
+        compute();
     }
 
-    function reload(){
-        $('#totalamount').load(location.href +' #totalamount');
-        $('#items').load(location.href +' #items');
-        $('#quantity').load(location.href +' #quantity');
+    // function reload(){
+    //     $('#totalamount').load(location.href +' #totalamount');
+    //     $('#items').load(location.href +' #items');
+    //     $('#quantity').load(location.href +' #quantity');
         
-    }
+    // }
 </script>
 @endsection

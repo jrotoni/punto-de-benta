@@ -377,12 +377,14 @@ Products
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
             @else
-            <form class="form-horizontal" action="{{url('products/additem')}}" method="POST" enctype="multipart/form-data">
+            <form class="form-horizontal" action="{{url('products/updateitem')}}" method="POST" enctype="multipart/form-data">
                 {{csrf_field()}}
+
+                <input type="hidden" id="hideproductID" name="id">
 
                 <div class="col-md-12 form-group">
                     <label>Product Name <small>(Unique)</small></label>
-                    <input name="name" class="form-control" type="text" required>
+                    <input name="name" class="form-control" type="text" id="update_name" required>
                 </div>
                 
                 <div class="col-md-12 form-group">
@@ -394,20 +396,15 @@ Products
                     </select>
                 </div>
 
-                <div class="form-group col-md-12">
-                    <label>Picture <small>(Optional and Up to 5MB only)</small></label>
-                    <input type="file" class="form-control" name="picture">
-                </div>
-
                 <div class="form-group">
                     <div class="col-md-6">
                         <label>Stock Price</label>
-                        <input name="stock_price" class="form-control" type="text">
+                        <input name="stock_price" class="form-control" type="text" id="update_stock">
                     </div>
 
                     <div class="col-md-6">
                         <label>Retail Price</label>
-                        <input name="retail_price" class="form-control" type="text">
+                        <input name="retail_price" class="form-control" type="text" id="update_retail">
                     </div>
                 </div>
 
@@ -577,12 +574,12 @@ Products
 	 			{ product_id: id, 
                   _token: "{{csrf_token()}}"},
 	 			function(data, status) {
-                    // console.log(data.category);
-                    //  data = JSON.decode(data);
-                    // console.log(data.category);
+                    // console.log(data);
                     data = JSON.parse(data);
-                    console.log(data.category);
-                    console.log(data.name);
+                    $('#hideproductID').val(data.id);
+                    $('#update_name').val(data.name);
+                    $('#update_stock').val(data.stockprice);
+                    $('#update_retail').val(data.retailprice);
 	 			});
     }
 

@@ -201,7 +201,7 @@ Products
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5">
             <table class="table table-striped table-responsive loadDiv">
                     <thead style="background-color: #ddccdf; color: #3c0045;">
                         <th>Category No.</th>

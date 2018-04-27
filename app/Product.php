@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    function user() {
-        return $this->belongsTo('App\User', 'company_id', 'id');
+    function sales() {
+        return $this->hasMany('App\Sale_Detail');
     }
 }

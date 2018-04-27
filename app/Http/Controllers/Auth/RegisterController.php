@@ -71,9 +71,9 @@ class RegisterController extends Controller
         // $destinationPath = public_path(). '/images/noimage.png';
         return User::create([
             'company_id' => $new_company->id,
-            'picture' => '/images/noimage.png',
+            'picture' => 'noimage.png',
             'role' => 'admin',
-            'name' => $data['name'],
+            'name' => $data['name'] .' (Admin)',
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             ]);

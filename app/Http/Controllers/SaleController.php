@@ -44,7 +44,14 @@ class SaleController extends Controller
     function show() {
         $id = Auth::user()->company_id;
         $company = Company::Find($id);
-        // $company = Company::with('sales')->where('id','=',$id)->get();
-        return view('settings.sales', compact('company'));
+        $totalsales = Sale::where('company_id', $id)->count();
+        $totalamount = Sale::where('company_id', $id)->sum('total_sales');
+        $topsales = Sale_Detail::join('sales', 'sales.id', '=', 'sale__details.sale_id')->where('company_id', $id)->selectRaw('product_name as prod, sum(quantity) as qty')->groupBy('prod')->orderBy('qty', 'desc')->limit(3)->get();
+        
+        // dd($topsales);
+        return view('settings.sales', compact('company', 'totalsales', 'totalamount', 'topsales'));
+
+        // $products = Product::where('company_id', $id)->pluck('id');
+
     }    
 }

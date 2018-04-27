@@ -27,7 +27,7 @@
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
 </head>
-<body>
+<body style="color: #2b0031;">
 		<div class="header">
 			<div class="logo">
 				<!-- <i class="fa fa-tachometer"></i> -->

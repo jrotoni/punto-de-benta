@@ -108,7 +108,7 @@
 <div class="container">
                 <div class="row vcenter">
                     <div class="col-lg-4 col-md-12 text-center">
-                            <h1 style="font-family: 'Pacifico', cursive; color: white; font-size: 9rem; margin-bottom:30px;">Punto de Benta</h1> 
+                            <h1 style="font-family: 'Pacifico', cursive; color: #ffbd58; font-size: 9rem; margin-bottom:30px;">Punto de Benta</h1> 
                         <h3 style="margin-bottom:50px;">An online Point of Sale System build from Laravel framework</h3>                       
                     @if (Route::has('login'))
                     @auth

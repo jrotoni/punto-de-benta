@@ -9,6 +9,20 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
        <style>
+        @media(max-width: 767px) {
+            .navbar-collapse > .navbar-right {
+                display: block;
+            }
+
+            .navbar-collapse {
+                background-color: #2ab27a;
+            }
+
+            .navbar-default {
+                z-index: 999;
+            }
+        }  
+         
         html {
             height: 100%;
         }

@@ -113,15 +113,17 @@ class ProductController extends Controller
         //     $categoryid = null;
         // }
         // echo $categoryname;
-
+        
         $array = [
             'id' => $request->product_id,
             'name' => $product->name,
+            'category' => $product->category_id,
             'stockprice' => $product->stock_price,
             'retailprice' => $product->retail_price
         ];
         
         echo json_encode($array);
+        // Session::set('categoryID', $product->category_id);
         // return response()->json(['category' => $array]);
     }
 

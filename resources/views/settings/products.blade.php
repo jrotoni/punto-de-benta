@@ -376,13 +376,13 @@ Products
                 <input type="hidden" id="hideproductID" name="id">
 
                 <div class="col-md-12 form-group">
-                    <label>Product Name <small>(Unique)</small></label>
+                <label>Product Name <small>(Unique)</small></label>
                     <input name="name" class="form-control" type="text" id="update_name" required>
                 </div>
                 
                 <div class="col-md-12 form-group">
                     <label>Category</label>
-                    <select class="form-control" name="category">
+                    <select class="form-control" name="category" id="update_category">
                         @foreach($company->categories as $key => $category)
                         <option value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
@@ -617,6 +617,7 @@ Products
                     $('#update_name').val(data.name);
                     $('#update_stock').val(data.stockprice);
                     $('#update_retail').val(data.retailprice);
+                    $('#update_category').val(data.category);
 	 			});
     }
 
